@@ -45,14 +45,32 @@
                 <div class="form-floating  mb-2 ">
                     <select class="form-select" id="exam_year" name="exam_year" required aria-label="select example">
                         <option value=""></option>
-                        <option>2010</option>
-                        <option>2011</option>
-                        <option>2012</option>
-                        <option>2013</option>
+                        
                     </select>
                     <label class="p-3" for="exam_year" class="form-label">Select Year of Exam (select one):</label>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please Select one Item.</div>
+                    <script>
+                        // Get the select field
+                        let select = document.getElementById("exam_year");
+                    
+                        // Start year
+                        let start = 1985;
+                    
+                        // End year
+                        let end = new Date().getFullYear();
+                    
+                        // Loop through the years
+                        for (let i = start; i <= end; i++) {
+                            // Create option element
+                            let option = document.createElement("option");
+                            // Set the value and text of the option
+                            option.value = i;
+                            option.text = i;
+                            // Append the option to the select field
+                            select.appendChild(option);
+                        }
+                    </script>
                 </div>                 
                 <div class="form-floating  mb-2 ">
                     <select class="form-select" id="exam_series" name="exam_series" required aria-label="select example">
