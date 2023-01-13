@@ -48,8 +48,6 @@
                         
                     </select>
                     <label class="p-3" for="exam_year" class="form-label">Select Year of Exam (select one):</label>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please Select one Item.</div>
                     <script>
                         // Get the select field
                         let select = document.getElementById("exam_year");
@@ -71,6 +69,8 @@
                             select.appendChild(option);
                         }
                     </script>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please Select one Item.</div>
                 </div>                 
                 <div class="form-floating  mb-2 ">
                     <select class="form-select" id="exam_series" name="exam_series" required aria-label="select example">
@@ -91,12 +91,23 @@
                 <div class="form-floating mb-2 ">
                     <select class="form-select" id="addressee_country" name="addressee_country" required aria-label="select example">
                         <option value="">select country</option>
-                        <option value="AF">Afghanistan</option>
-                        <option value="AX">Aland Islands</option>
-                        <option value="AL">Albania</option>
-                        <option value="DZ">Algeria</option>
+                        
                     </select>
                     <label class="p-3" for="addressee_country" class="form-label">Select Country (select one):</label>
+                    <script>
+                        var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central Arfrican Republic","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cuba","Curacao","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauro","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria"]
+                        // Get the select element
+                        let sele = document.getElementById("addressee_country");
+
+                        // Add options to the select element
+                        for (let i = 0; i < countries.length; i++) {
+                            let option = document.createElement("option");
+                            option.value = countries[i];
+                            option.text = countries[i];
+                            sele.appendChild(option);
+                        }
+
+                    </script>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please Select one Item.</div>
                 </div>
@@ -117,16 +128,16 @@
                     <label class="p-3" for="full_name">Company/ Institution Name</label>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
-                </div>  
+                </div> 
                 <div class="form-floating mb-2">
-                    <textarea class="form-control" id="postal_address" name="postal_address" placeholder="Enter Postal Address" required></textarea>
-                    <label class="p-3" for="comment">Postal Address</label>
+                    <input type="text" class="form-control" id="addressee_town" placeholder="Enter Town Name..." name="addressee_town" required>
+                    <label class="p-3" for="full_name">Town Name</label>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>
                 <div class="form-floating mb-2">
-                    <input type="text" class="form-control" id="addressee_town" placeholder="Enter Town Name..." name="addressee_town" required>
-                    <label class="p-3" for="full_name">Town Name</label>
+                    <textarea class="form-control" id="postal_address" name="postal_address" placeholder="Enter Postal Address" required></textarea>
+                    <label class="p-3" for="comment">Postal Address</label>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>
@@ -155,7 +166,6 @@
                     <label class="p-3" for="pf_name">PF Number</label>
                 </div>
             </div>
-            <!-- One "tab" for each step in the form: -->
             <div class="tab">
                 <h5>ATTACHMENTS</h5>
                 <h6>Ensure you Upload one of the following:</h6>
@@ -165,10 +175,40 @@
                     <li>Nominal Roll from your School</li>
                 </ul>
                 <div class=" mb-3">
-                    <input class="form-control" type="file" id="file_upload" required>
-                    <label for="file_upload" class="form-label">Upload One Document</label>
+                    <input class="form-control" type="file" id="file_upload" accept="image/*" onchange="validateImage(this)" required>
+                    <label for="file_upload" class="form-label">Upload One Document (image only, max 1mb)</label>
                 </div>
+                <script>
+                    function validateImage(input) {
+                        let file = input.files[0];
+                        let fileType = file.type;
+                        let fileSize = file.size;
+                        if (fileSize > 1000000) {
+                            alert("File size must be less than 1mb.");
+                            input.value = "";
+                        } else if (fileType !== "image/jpeg" && fileType !== "image/png" && fileType !== "image/gif") {
+                            alert("File must be a JPEG, PNG or GIF.");
+                            input.value = "";
+                        } else {
+                            let reader = new FileReader();
+                            reader.onload = function(e) {
+                                let image = new Image();
+                                image.src = e.target.result;
+                                image.onload = function() {
+                                    if (this.width < 100 || this.height < 100) {
+                                        alert("Image must have a minimum width and height of 100px.");
+                                        input.value = "";
+                                    } else {
+                                        // image is valid
+                                    }
+                                };
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                </script>
             </div>
+            
              <!-- One "tab" for each step in the form: -->
              <div class="tab">
                 <h5>DISPATCH</h5>
